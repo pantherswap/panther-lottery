@@ -53,6 +53,9 @@ contract Lottery is LotteryOwnable, Initializable {
     // default false
     bool public drawingPhase;
 
+    // Transfer tax rate in basis points. (default 5%)
+    uint16 public transferTaxRate = 500;
+
     // =================================
 
     event Buy(address indexed user, uint256 tokenId);
@@ -215,7 +218,8 @@ contract Lottery is LotteryOwnable, Initializable {
             totalAddresses = totalAddresses + 1;
         }
         userInfo[msg.sender].push(tokenId);
-        totalAmount = totalAmount.add(_price);
+        uint256 transferTax = _price.mul(transferTaxRate).div(10000);
+        totalAmount = totalAmount.add(_price.sub(transferTax));
         lastTimestamp = block.timestamp;
         uint64[keyLengthForEachBuy] memory userNumberIndex = generateNumberIndexKey(_numbers);
         for (uint i = 0; i < keyLengthForEachBuy; i++) {
@@ -229,6 +233,7 @@ contract Lottery is LotteryOwnable, Initializable {
         require (!drawed(), 'drawed, can not buy now');
         require (_price >= minPrice, 'price must above minPrice');
         uint256 totalPrice  = 0;
+        uint256 transferTax = _price.mul(transferTaxRate).div(10000);
         for (uint i = 0; i < _numbers.length; i++) {
             for (uint j = 0; j < 4; j++) {
                 require (_numbers[i][j] <= maxNumber && _numbers[i][j] > 0, 'exceed number scope');
@@ -239,7 +244,7 @@ contract Lottery is LotteryOwnable, Initializable {
                 totalAddresses = totalAddresses + 1;
             }
             userInfo[msg.sender].push(tokenId);
-            totalAmount = totalAmount.add(_price);
+            totalAmount = totalAmount.add(_price.sub(transferTax));
             lastTimestamp = block.timestamp;
             totalPrice = totalPrice.add(_price);
             uint64[keyLengthForEachBuy] memory numberIndexKey = generateNumberIndexKey(_numbers[i]);
@@ -387,6 +392,11 @@ contract Lottery is LotteryOwnable, Initializable {
     // Set the allocation for one reward
     function setAllocation(uint8 _allcation1, uint8 _allcation2, uint8 _allcation3) external onlyAdmin {
         allocation = [_allcation1, _allcation2, _allcation3];
+    }
+
+    // Set transfer tax rate of PANTHER token
+    function setTransferTaxRate(uint16 _transferTaxRate) public onlyAdmin {
+        transferTaxRate = _transferTaxRate;
     }
 
 }
