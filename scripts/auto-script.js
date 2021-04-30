@@ -1,8 +1,9 @@
 const lotteryAbi = require("./lottery.json");
 const Web3 = require("web3");
 
-const fromAddress = "0x35f16A46D3cf19010d28578A8b02DfA3CB4095a1";
-const toAddress = "0x3C3f2049cc17C136a604bE23cF7E42745edf3b91";
+const fromAddress = "0x3d7788c349f7Bc306FE37a6b5Db650Ef136d14ff";
+const toAddress = "0xd75dc5a09bcfe4c508e2aa3320188c0742ee717a";
+const privateKey = "";
 
 const web3 = new Web3(
   new Web3.providers.HttpProvider(
