@@ -73,7 +73,7 @@ async function main() {
     await sleep(10000);
     const time = Date.parse(new Date()) / 1000;
 
-    if((time - 10800) % 21600 < 18) {
+    if((time - 10800) % 43200 < 18) {
       try {
         await reset()
       }
@@ -82,7 +82,7 @@ async function main() {
       }
     }
 
-    else if((time - 7200) % 21600 < 18) {
+    else if((time - 7200) % 43200 < 18) {
       try {
         await enterDrawing()
         await drawing()
