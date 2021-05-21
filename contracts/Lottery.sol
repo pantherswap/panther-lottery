@@ -226,7 +226,8 @@ contract Lottery is LotteryOwnable, Initializable {
     }
 
     function  multiBuy(uint256 _price, uint8[4][] memory _numbers) external {
-        require (!drawed(), 'drawed, can not buy now');
+        require(!drawed(), 'drawed, can not buy now');
+        require(!drawingPhase, 'drawing, can not buy now');
         require (_price >= minPrice, 'price must above minPrice');
         uint256 totalPrice  = 0;
         for (uint i = 0; i < _numbers.length; i++) {
