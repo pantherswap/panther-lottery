@@ -268,12 +268,12 @@ contract Lottery is LotteryOwnable, Initializable {
         for (uint i = 0; i < _tickets.length; i++) {
             require (msg.sender == lotteryNFT.ownerOf(_tickets[i]), "not from owner");
             require (!lotteryNFT.getClaimStatus(_tickets[i]), "claimed");
+            lotteryNFT.claimReward(_tickets[i]);
             uint256 reward = getRewardView(_tickets[i]);
             if(reward>0) {
                 totalReward = reward.add(totalReward);
             }
         }
-        lotteryNFT.multiClaimReward(_tickets);
         if(totalReward>0) {
             panther.safeTransfer(address(msg.sender), totalReward);
         }
